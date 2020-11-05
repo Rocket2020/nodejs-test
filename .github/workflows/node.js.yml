@@ -14,7 +14,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - run: npm ci
+    - run: echo 1
+    - run: echo 2
+    - run: echo 3
+    - run: echo 4
   
   slack-notification:
     needs: [build]
@@ -30,26 +33,27 @@ jobs:
           #channel: '#general'
           mention: 'here, U01E2PFRPR9'
           if_mention: failure,cancelled
-          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took # selectable (default: repo,message)
+          fields: repo,commit,eventName,ref,workflow,action,message,author,job,took
+          #fields: repo,message,commit,author,action,eventName,ref,workflow,job,took # selectable (default: repo,message)
           custom_payload: |
-#           {
-#             username: 'GitHub Action CI WorkFlow',
-#             icon_emoji: ':octocat:',
-#             attachments: [{
-#               color: '${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning',
-#               text:
-#               `${process.env.AS_REPO}\n
-#                ${process.env.AS_COMMIT}\n 
-#                ${process.env.AS_EVENT_NAME}\n
-#                @${process.env.AS_REF}\n
-#                @${process.env.AS_WORKFLOW}\n
-#                ${process.env.AS_ACTION}\n
-#                ${process.env.AS_MESSAGE}\n 
-#                ${process.env.AS_AUTHOR}\n 
-#                ${{ job.status }}\n
-#                ${process.env.AS_TOOK}`,
-#             }]
-#           }
+            {
+            username: 'GitHub Action CI WorkFlow',
+            icon_emoji: ':octocat:',
+            attachments: [{
+              color: '${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning',
+              text:
+              `${process.env.AS_REPO}\n
+               ${process.env.AS_COMMIT}\n 
+               ${process.env.AS_EVENT_NAME}\n
+               @${process.env.AS_REF}\n
+               @${process.env.AS_WORKFLOW}\n
+               ${process.env.AS_ACTION}\n
+               ${process.env.AS_MESSAGE}\n 
+               ${process.env.AS_AUTHOR}\n 
+               ${{ job.status }}\n
+               ${process.env.AS_TOOK}`,
+            }]
+            }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
         if: always() # Pick up events even if the job fails or is canceled.
