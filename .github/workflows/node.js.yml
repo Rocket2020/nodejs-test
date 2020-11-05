@@ -31,8 +31,8 @@ jobs:
           MATRIX_CONTEXT: ${{ toJson(matrix) }} # required
         with:
           #status: custom
-          status: ${{ job.status }}
-          # status: env.WORKFLOW_CONCLUSION
+          # status: ${{ job.status }}
+          status: env.WORKFLOW_CONCLUSION
           author_name: GitHubAction Started on
           #text: 'Unit Test'
           #channel: '#general'
