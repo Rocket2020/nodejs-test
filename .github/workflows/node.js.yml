@@ -16,9 +16,12 @@ jobs:
     - run: echo 4
     
   
-    - name: Slack Notification
+
     - uses: 8398a7/action-slack@v3
-      if: always()
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: always() # Pick up events even if the job fails or is canceled.
+        MATRIX_CONTEXT: ${{ toJson(matrix) }} # required
       with:
         #status: custom
         status: ${{ job.status }}
@@ -46,10 +49,7 @@ jobs:
                ${process.env.AS_TOOK}`,
             }]
             }
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        if: always() # Pick up events even if the job fails or is canceled.
-        MATRIX_CONTEXT: ${{ toJson(matrix) }} # required
+      
 
 #       - uses: 8398a7/action-slack@v3
 #         with:
