@@ -33,7 +33,7 @@ jobs:
           #channel: '#general'
           mention: 'here, U01E2PFRPR9'
           if_mention: failure,cancelled
-          fields: repo,commit,eventName,ref,workflow,action,message,author,job,took
+          fields: repo,commit,eventName,ref,workflow,message,author,job,took
           #fields: repo,message,commit,author,action,eventName,ref,workflow,job,took # selectable (default: repo,message)
           custom_payload: |
             {
@@ -47,7 +47,6 @@ jobs:
                ${process.env.AS_EVENT_NAME}\n
                @${process.env.AS_REF}\n
                @${process.env.AS_WORKFLOW}\n
-               ${process.env.AS_ACTION}\n
                ${process.env.AS_MESSAGE}\n 
                ${process.env.AS_AUTHOR}\n 
                ${{ job.status }}\n
@@ -56,7 +55,8 @@ jobs:
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
-        if: always() # Pick up events even if the job fails or is canceled.
+          MATRIX_CONTEXT: ${{ toJson(matrix) }} # required
+          if: always() # Pick up events even if the job fails or is canceled.
       
 #       with:
 #         status: custom
