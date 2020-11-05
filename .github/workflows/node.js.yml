@@ -27,38 +27,55 @@ jobs:
     steps:
       - uses: 8398a7/action-slack@v3
         with:
-          status: ${{ job.status }}
-          author_name: GitHubAction CI
-          #text: 'Unit Test'
-          #channel: '#general'
-          mention: 'here, U01E2PFRPR9'
-          if_mention: failure,cancelled
-          fields: repo,commit,eventName,ref,workflow,message,author,job,took
-          #fields: repo,message,commit,author,action,eventName,ref,workflow,job,took # selectable (default: repo,message)
+          status: custom
+          fields: workflow,job,commit,repo,ref,author,took
           custom_payload: |
             {
-            username: 'GitHub Action CI WorkFlow',
-            icon_emoji: ':octocat:',
-            attachments: [{
-              color: '${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning',
-              text:
-              `${process.env.AS_REPO}\n
-               ${process.env.AS_COMMIT}\n 
-               ${process.env.AS_EVENT_NAME}\n
-               @${process.env.AS_REF}\n
-               @${process.env.AS_WORKFLOW}\n
-               ${process.env.AS_MESSAGE}\n 
-               ${process.env.AS_AUTHOR}\n 
-               ${{ job.status }}\n
-               ${process.env.AS_TOOK}`,
-            }]
+              username: 'action-slack',
+              icon_emoji: ':octocat:',
+              attachments: [{
+                color: '${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning',
+                text: `${process.env.AS_WORKFLOW}\n${process.env.AS_JOB} (${process.env.AS_COMMIT}) of ${process.env.AS_REPO}@${process.env.AS_REF} by ${process.env.AS_AUTHOR} succeeded in ${process.env.AS_TOOK}`,
+              }]
             }
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
-          MATRIX_CONTEXT: ${{ toJson(matrix) }} # required
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           if: always() # Pick up events even if the job fails or is canceled.
+    
+        
+#         with:
+#           status: ${{ job.status }}
+#           author_name: GitHubAction CI
+#           #text: 'Unit Test'
+#           #channel: '#general'
+#           mention: 'here, U01E2PFRPR9'
+#           if_mention: failure,cancelled
+#           fields: repo,commit,eventName,ref,workflow,message,author,job,took
+#           #fields: repo,message,commit,author,action,eventName,ref,workflow,job,took # selectable (default: repo,message)
+#           custom_payload: |
+#             {
+#             username: 'GitHub Action CI WorkFlow',
+#             icon_emoji: ':octocat:',
+#             attachments: [{
+#               color: '${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning',
+#               text:
+#               `${process.env.AS_REPO}\n
+#                ${process.env.AS_COMMIT}\n 
+#                ${process.env.AS_EVENT_NAME}\n
+#                @${process.env.AS_REF}\n
+#                @${process.env.AS_WORKFLOW}\n
+#                ${process.env.AS_MESSAGE}\n 
+#                ${process.env.AS_AUTHOR}\n 
+#                ${{ job.status }}\n
+#                ${process.env.AS_TOOK}`,
+#             }]
+#             }
+#         env:
+#           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
+#           MATRIX_CONTEXT: ${{ toJson(matrix) }} # required
+#           if: always() # Pick up events even if the job fails or is canceled.
       
-#       with:
+# #       with:
 #         status: custom
 #         #fields: repo,commit,eventName,ref,workflow,action,message,author,job,took
 #         fields: all
