@@ -13,7 +13,6 @@ jobs:
     - run: echo 1
     - run: echo 2
     - run: echo 3
-    - run: exit 4
     - uses: 8398a7/action-slack@v3
       if: always() # Pick up events even if the job fails or is canceled.
       env:
