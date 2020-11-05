@@ -14,7 +14,10 @@ jobs:
     - run: exit 1
     - run: echo 3
     - run: echo 4
-
+    
+  
+    - name: Slack Notification
+      if: ${{ always() }}
     - uses: 8398a7/action-slack@v3
       with:
         #status: custom
