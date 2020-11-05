@@ -19,12 +19,12 @@ jobs:
       with:
         #status: custom
         status: ${{ job.status }}
-        author_name: GitHubAction CI
+        author_name: GitHubAction Started on
         #text: 'Unit Test'
         #channel: '#general'
         mention: 'here, U01E2PFRPR9'
         if_mention: failure,cancelled
-        fields: repo,commit,eventName,ref,workflow,message,author,job,took
+        fields: Git-Repo,commit-id,Event-Triggered,ref,workflow,message,author,job,took
         custom_payload: |
             {
             username: 'GitHub Action CI WorkFlow',
