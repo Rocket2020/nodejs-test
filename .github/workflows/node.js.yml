@@ -27,7 +27,7 @@ jobs:
             icon_emoji: ':octocat:',
             attachments: [{
               color: '${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning',
-              text: |
+              text:
               `${process.env.AS_REPO}\n
                ${process.env.AS_COMMIT}\n 
                ${process.env.AS_EVENT_NAME}\n
