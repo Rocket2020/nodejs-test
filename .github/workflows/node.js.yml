@@ -18,7 +18,7 @@ jobs:
   
   slack-notification:
     needs: [build]
-    if: ${{ failure() }}
+    #if: ${{ failure() }}
     name: Slack Notification
     runs-on: ubuntu-latest
     steps:
