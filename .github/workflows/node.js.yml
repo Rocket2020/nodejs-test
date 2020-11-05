@@ -11,34 +11,52 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - run: npm ci
-    - uses: 8398a7/action-slack@v3
-      with:
-        status: custom
-        #fields: repo,commit,eventName,ref,workflow,action,message,author,job,took
-        fields: all
-        custom_payload: |
-          {
-            username: 'GitHub Action CI WorkFlow',
-            icon_emoji: ':octocat:',
-            attachments: [{
-              color: '${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning',
-              text:
-              `${process.env.AS_REPO}\n
-               ${process.env.AS_COMMIT}\n 
-               ${process.env.AS_EVENT_NAME}\n
-               @${process.env.AS_REF}\n
-               @${process.env.AS_WORKFLOW}\n
-               ${process.env.AS_ACTION}\n
-               ${process.env.AS_MESSAGE}\n 
-               ${process.env.AS_AUTHOR}\n 
-               ${{ job.status }}\n
-               ${process.env.AS_TOOK}`,
-            }]
-          }
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+  
+  slack-notification:
+    needs: [put,other,job,ids,here]
+    if: ${{ failure() }}
+    name: Slack Notification
+    runs-on: ubuntu-latest
+    steps:
+      - uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          author_name: GitHubAction CI
+          text: 'Unit Test'
+          mention: 'here, U01E2PFRPR9'
+          channel: '#general'
+          if_mention: failure,cancelled
+          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took # selectable (default: repo,message)
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
+        if: always() # Pick up events even if the job fails or is canceled.
+      
+#       with:
+#         status: custom
+#         #fields: repo,commit,eventName,ref,workflow,action,message,author,job,took
+#         fields: all
+#         custom_payload: |
+#           {
+#             username: 'GitHub Action CI WorkFlow',
+#             icon_emoji: ':octocat:',
+#             attachments: [{
+#               color: '${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning',
+#               text:
+#               `${process.env.AS_REPO}\n
+#                ${process.env.AS_COMMIT}\n 
+#                ${process.env.AS_EVENT_NAME}\n
+#                @${process.env.AS_REF}\n
+#                @${process.env.AS_WORKFLOW}\n
+#                ${process.env.AS_ACTION}\n
+#                ${process.env.AS_MESSAGE}\n 
+#                ${process.env.AS_AUTHOR}\n 
+#                ${{ job.status }}\n
+#                ${process.env.AS_TOOK}`,
+#             }]
+#           }
+#       env:
+#         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
