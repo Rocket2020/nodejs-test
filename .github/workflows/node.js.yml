@@ -17,8 +17,8 @@ jobs:
     
   
     - name: Slack Notification
-      if: ${{ always() }}
     - uses: 8398a7/action-slack@v3
+      if: always()
       with:
         #status: custom
         status: ${{ job.status }}
