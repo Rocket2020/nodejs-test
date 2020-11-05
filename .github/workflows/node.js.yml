@@ -18,11 +18,27 @@ jobs:
     - run: npm ci
     - uses: 8398a7/action-slack@v3
       with:
-        status: ${{ job.status }}
-        author_name: Integration Test # default: 8398a7@action-slack
-        fields: repo,commit,message,author # default: repo,commit
-        mention: Hello Dear
-        if_mention: failure,cancelled
+        status: custom
+        #fields: repo,commit,eventName,ref,workflow,action,message,author,job,took
+        fields: all
+        custom_payload: |
+          {
+            username: 'GitHub Action CI WorkFlow',
+            icon_emoji: ':octocat:',
+            attachments: [{
+              color: '${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning',
+              text: |
+              `${process.env.AS_REPO}\n
+               ${process.env.AS_COMMIT}\n 
+               ${process.env.AS_EVENT_NAME}\n
+               @${process.env.AS_REF}\n
+               @${process.env.AS_WORKFLOW}\n
+               ${process.env.AS_ACTION}\n
+               ${process.env.AS_MESSAGE}\n 
+               ${process.env.AS_AUTHOR}\n 
+               ${{ job.status }}\n
+               ${process.env.AS_TOOK}`,
+            }]
+          }
       env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
-      if: always() # Pick up events even if the job fails or is canceled.
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
