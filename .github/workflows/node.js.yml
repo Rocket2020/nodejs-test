@@ -11,9 +11,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - run: echo 1
-    - run: exit 1
+    - run: echo 2
     - run: echo 3
-    - run: echo 4
+    - run: exit 1
     - uses: 8398a7/action-slack@v3
       if: always() # Pick up events even if the job fails or is canceled.
       env:
@@ -22,15 +22,13 @@ jobs:
       with:
         status: ${{ job.status }}
         author_name: GitHubAction Started on
-        #text: 'Unit Test'
-        #channel: '#general'
-        mention: 'here, U01E2PFRPR9'
+        mention: '@here, U01E2PFRPR9'
         if_mention: failure,cancelled
         fields: repo,commit,eventName,ref,workflow,message,author,job,took
         custom_payload: |
             {
             username: 'GitHub Action CI WorkFlow',
-            icon_emoji: ':octocat:',
+            icon_emoji: ':github:',
             attachments: [{
               color: '${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning',
               text:
