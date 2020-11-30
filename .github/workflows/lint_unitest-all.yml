@@ -1,0 +1,19 @@
+name: Pull Request Workflow
+on:
+  pull_request:
+    types: [ assigned, opened, synchronize, reopened ]
+  push:
+    branches: [ develop, feature/*, trunk ]
+jobs:
+  sonarcloud:
+    name: SonarCloud
+    runs-on: ubuntu-latest
+    if: github.ref != 'refs/heads/develop'
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis          
+
+      - name: 1 
+        run:  echo 1
