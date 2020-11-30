@@ -7,11 +7,7 @@ on:
       - trunk
       - feature/*
   pull_request:
-  push:
-    branches:
-      - develop
-      - trunk
-      - feature/*
+
 jobs:
   sonarcloud:
     name: SonarCloud
