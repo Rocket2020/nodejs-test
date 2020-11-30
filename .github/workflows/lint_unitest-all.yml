@@ -1,10 +1,6 @@
 name: Finalize
 
 on: [push, pull_request]
-  branches:
-    - develop
-    - trunk
-    - feature/*
 
 jobs:
   sonarcloud:
