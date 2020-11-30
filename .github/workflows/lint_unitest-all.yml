@@ -9,23 +9,10 @@ on:
   pull_request:
 
 jobs:
-  pre_job:
-    # continue-on-error: true # Uncomment once integration is finished
+  sonarcloud:
+    name: SonarCloud
     runs-on: ubuntu-latest
-    # Map a step output to a job output
-    outputs:
-      should_skip: ${{ steps.skip_check.outputs.should_skip }}
-    steps:
-      - id: skip_check
-        uses: fkirc/skip-duplicate-actions@master
-        with:
-          github_token: ${{ github.token }}
-          paths_ignore: '["**/README.md", "**/docs/**"]'
-
-  main_job:
-    needs: pre_job
-    if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
-    runs-on: ubuntu-latest
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
     steps:
       - uses: actions/checkout@v2
         with:
