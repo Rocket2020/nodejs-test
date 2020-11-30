@@ -7,7 +7,12 @@ on:
       - trunk
       - feature/*
   pull_request:
-    types: [opened, synchronize, reopened]
+    branches-ignore:
+      # Push events to branches matching refs/heads/feature/*
+      - 'feature/*'
+    # # Sequence of patterns matched against refs/tags
+    # tags-ignore:
+    #   - v1.*           # Push events to tags v1.0, v1.1, and v1.9
 
 jobs:
   sonarcloud:
