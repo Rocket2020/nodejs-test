@@ -1,9 +1,12 @@
-name: Pull Request Workflow
+name: Build and Test
+
 on:
   pull_request:
-    types: [ assigned, opened, synchronize, reopened ]
   push:
-    branches: [ develop, feature/*, trunk ]
+    branches:
+      - develop
+      - trunk
+      - feature/*
 jobs:
   sonarcloud:
     name: SonarCloud
