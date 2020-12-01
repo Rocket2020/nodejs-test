@@ -9,8 +9,13 @@
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
+  "pre-commit": [
+    "lint",
+    "test"
+  ],
   "dependencies": {
     "@angular/animations": "~9.1.7",
+    "pre-commit": "^1.2.2",
     "@angular/common": "~9.1.7",
     "@angular/compiler": "~9.1.7",
     "@angular/core": "~9.1.7",
