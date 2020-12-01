@@ -66,7 +66,8 @@ jobs:
           author_name: GitHubAction CI for develop branch
           mention: 'here'
           if_mention: failure,cancelled
-          fields: repo,commit,eventName,ref,workflow,message,took
+          job_name: sonarcloud # Match the name above.
+          fields: repo,commit,eventName,ref,workflow,message,job,took
           custom_payload: |
             {
             username: 'GitHub Action CI WorkFlow',
@@ -80,6 +81,7 @@ jobs:
               @${process.env.AS_REF}\n
               @${process.env.AS_WORKFLOW}\n
               ${process.env.AS_MESSAGE}\n
+              ${process.env.AS_JOB}\n
               ${process.env.AS_TOOK}`,
             }]
             }
