@@ -19,14 +19,17 @@ jobs:
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
-      - name: 1 
-        run:  echo 1
+      # Install Dependencies 
+      - name: Install dependencies
+        run:  npm ci
+      
+      # Run lint test
+      - name: Run lint Test if present only
+        run:  npm run lint
 
-      - name: 2 
-        run:  echo 2
-
-      - name: 3 
-        run:  echo 2 
+      # Run unit test 
+      - name: Run unit test if present only
+        run:  npm run test 
       
       # Run Sonarcloudscan
       - name: SonarCloud Scan
