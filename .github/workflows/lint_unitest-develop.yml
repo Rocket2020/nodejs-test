@@ -65,7 +65,7 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         with:
           status: ${{ job.status }}
-          author_name: GitHubAction CI for trunk branch
+          author_name: GitHubAction CI for develop branch
           mention: 'here'
           if_mention: failure,cancelled
           fields: repo,commit,eventName,ref,workflow,message
