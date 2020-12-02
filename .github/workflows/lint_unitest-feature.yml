@@ -60,7 +60,8 @@ jobs:
           EXIT_CODE_FROM_REPORT: "True"
           SLACK_CHANNEL: C01DVRBPWGN
           SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
-          XUNIT_PATH: .coverage/test_report.xml
+          XUNIT_PATH: /home/runner/work/nodejs-test/nodejs-test/coverage/test_report.xml
+          #XUNIT_PATH: .coverage/test_report.xml
 
       # Run Slack Notification
       - name: Slack Notification
@@ -71,7 +72,7 @@ jobs:
           MATRIX_CONTEXT: ${{ toJson(matrix) }} # required
         with:
           status: ${{ job.status }}
-          author_name: GitHubAction CI for develop branch
+          author_name: GitHubAction CI for feature branch
           mention: 'here'
           if_mention: failure,cancelled
           job_name: SonarCloud # Match the name above.

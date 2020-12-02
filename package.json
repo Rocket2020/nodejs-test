@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
+    "hello": "echo You are an Awesome Developer",
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test --no-watch --code-coverage --browsers ChromeHeadless",
@@ -11,8 +12,7 @@
   },
   "precommit.silent": true,
   "pre-commit": [
-    "lint",
-    "test"
+    "hello"
   ],
   "dependencies": {
     "@angular/animations": "~9.1.7",
