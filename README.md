@@ -1,3 +1,6 @@
+TEST
+
+
 # Angular with Sonar analysis sample
 
 A simple Angular application to demonstrate SonarCloud/SonarQube analysis.
