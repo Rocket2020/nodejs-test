@@ -5,11 +5,21 @@ name: SonarCloud CI - Develop Branch
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the develop branch
 on:
-  push:
-    branches: [ develop ]
+  workflow_dispatch:
   pull_request:
+    paths-ignore:
+      - 'docs/**'
+      - '**.md'
+      - '.gitignore'
     branches: [ develop ]
     types: [opened, synchronize, reopened]
+  push:
+    paths-ignore:
+      - 'docs/**'
+      - '**.md'
+      - '.gitignore'
+    branches: [ develop ]
+
 jobs:
   sonarcloud:
     name: SonarCloud
@@ -19,44 +29,44 @@ jobs:
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
-      # - name: Cache node modules
-      #   uses: actions/cache@v2
-      #   id: cache-node-modules
-      #   env:
-      #     cache-name: cache
-      #   with:
-      #     # npm cache files are stored in `~/.npm` on Linux/macOS
-      #     path: |
-      #       ~/.npm
-      #       node_modules
-      #       */*/node_modules
-      #     key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package.json') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-build-${{ env.cache-name }}-
-      #       ${{ runner.os }}-build-
-      #       ${{ runner.os }}-
+      - name: Cache node modules
+        uses: actions/cache@v2
+        id: cache-node-modules
+        env:
+          cache-name: cache
+        with:
+          # npm cache files are stored in `~/.npm` on Linux/macOS
+          path: |
+            ~/.npm
+            node_modules
+            */*/node_modules
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
 
 
-      # # Install Dependencies 
-      # - name: Install dependencies
-      #   if: steps.cache-node-modules.outputs.cache-hit != 'true'
-      #   run:  npm install
+      # Install Dependencies 
+      - name: Install dependencies
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run:  npm install
       
-      # # Run lint test
-      # - name: Run lint Test if present only
-      #   run:  npm run lint
+      # Run lint test
+      - name: Run lint Test if present only
+        run:  npm run lint
 
-      # # Run unit test 
-      # - name: Run unit test if present only
-      #   run:  npm run test 
-      
-      # # Run Sonarcloudscan
-      # - name: SonarCloud Scan
-      #   uses: SonarSource/sonarcloud-github-action@master
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      # Run unit test 
+      - name: Run unit test if present only
+        run:  npm run test
 
+      # Run Sonarcloudscan
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+       
       # Run Slack Notification
       - name: Slack Notification
         if: always() # Pick up events even if the job fails or is canceled.
@@ -69,7 +79,8 @@ jobs:
           author_name: GitHubAction CI for develop branch
           mention: 'here'
           if_mention: failure,cancelled
-          fields: repo,commit,eventName,ref,workflow,message,took
+          job_name: SonarCloud # Match the name above.
+          fields: repo,commit,eventName,ref,workflow,message,author,job,took
           custom_payload: |
             {
             username: 'GitHub Action CI WorkFlow',
@@ -83,6 +94,8 @@ jobs:
               @${process.env.AS_REF}\n
               @${process.env.AS_WORKFLOW}\n
               ${process.env.AS_MESSAGE}\n
+              ${process.env.AS_AUTHOR}\n
+              ${process.env.AS_JOB}\n
               ${process.env.AS_TOOK}`,
             }]
             }

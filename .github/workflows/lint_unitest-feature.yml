@@ -5,8 +5,14 @@ name: SonarCloud CI - Feature Branch
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the develop branch
 on:
+  workflow_dispatch:
   push:
+    paths-ignore:
+      - 'docs/**'
+      - '**.md'
+      - '.gitignore'
     branches: [ 'feature/*' ]
+
 jobs:
   sonarcloud:
     name: SonarCloud
@@ -45,24 +51,15 @@ jobs:
 
       # Run unit test 
       - name: Run unit test if present only
-        run:  npm run test 
-      
+        run:  npm run test
+
       # Run Sonarcloudscan
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
-      - name: xUnit Slack Reporter
-        uses: ivanklee86/xunit-slack-reporter@v1.0.1
-        env:
-          EXIT_CODE_FROM_REPORT: "True"
-          SLACK_CHANNEL: C01DVRBPWGN
-          SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
-          XUNIT_PATH: /home/runner/work/nodejs-test/nodejs-test/coverage/test_report.xml
-          #XUNIT_PATH: .coverage/test_report.xml
-
+       
       # Run Slack Notification
       - name: Slack Notification
         if: always() # Pick up events even if the job fails or is canceled.
