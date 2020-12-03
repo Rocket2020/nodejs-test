@@ -5,11 +5,21 @@ name: SonarCloud CI - Develop Branch
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the develop branch
 on:
-  push:
-    branches: [ develop ]
+  workflow_dispatch:
   pull_request:
+    paths-ignore:
+      - 'docs/**'
+      - '**.md'
+      - '.gitignore'
     branches: [ develop ]
     types: [opened, synchronize, reopened]
+  push:
+    paths-ignore:
+      - 'docs/**'
+      - '**.md'
+      - '.gitignore'
+    branches: [ develop ]
+
 jobs:
   sonarcloud:
     name: SonarCloud
@@ -48,27 +58,29 @@ jobs:
 
       # Run unit test 
       - name: Run unit test if present only
-        run:  npm run test 
-      
+        run:  npm run test
+
       # Run Sonarcloudscan
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
+       
       # Run Slack Notification
       - name: Slack Notification
         if: always() # Pick up events even if the job fails or is canceled.
         uses: 8398a7/action-slack@v3
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          MATRIX_CONTEXT: ${{ toJson(matrix) }} # required
         with:
           status: ${{ job.status }}
-          author_name: GitHubAction CI for trunk branch
+          author_name: GitHubAction CI for develop branch
           mention: 'here'
           if_mention: failure,cancelled
-          fields: repo,commit,eventName,ref,workflow,message
+          job_name: SonarCloud # Match the name above.
+          fields: repo,commit,eventName,ref,workflow,message,author,job,took
           custom_payload: |
             {
             username: 'GitHub Action CI WorkFlow',
@@ -81,6 +93,9 @@ jobs:
               ${process.env.AS_EVENT_NAME}\n
               @${process.env.AS_REF}\n
               @${process.env.AS_WORKFLOW}\n
-              ${process.env.AS_MESSAGE}`,
+              ${process.env.AS_MESSAGE}\n
+              ${process.env.AS_AUTHOR}\n
+              ${process.env.AS_JOB}\n
+              ${process.env.AS_TOOK}`,
             }]
             }
