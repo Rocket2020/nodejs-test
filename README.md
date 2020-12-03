@@ -1,6 +1,6 @@
 # Angular with Sonar analysis sample
 
-A simple Angular application to demonstrate SonarCloud/SonarQube analysis.
+A simple Angular application to demonstrate SonarCloud/SonarQube analysis.TEST
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.6.
 
