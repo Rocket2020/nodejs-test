@@ -1,6 +1,6 @@
 # GitHub Actions WorkFlow
 
-name: SonarCloud CI - Feature Branch
+name: SonarCloud CI - Release Branch
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the develop branch
@@ -11,8 +11,7 @@ on:
       - 'docs/**'
       - '**.md'
       - '.gitignore'
-      - '.github/*'
-    branches: [ 'feature/*' ]
+    branches: [ 'release/*' ]
 
 jobs:
   sonarcloud:
@@ -70,7 +69,7 @@ jobs:
           MATRIX_CONTEXT: ${{ toJson(matrix) }} # required
         with:
           status: ${{ job.status }}
-          author_name: GitHubAction CI for feature branch
+          author_name: GitHubAction CI for release branch
           mention: 'here'
           if_mention: failure,cancelled
           job_name: SonarCloud # Match the name above.
